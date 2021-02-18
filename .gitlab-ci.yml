@@ -4,12 +4,6 @@ stages:
   - test
   - deploy
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - node_modules/
-    - .yarn
-
 include:
   - template: Security/Secret-Detection.gitlab-ci.yml
 
@@ -17,7 +11,7 @@ build:
   stage: build
   image: node:14
   script:
-    - &npm-install yarn install --frozen-lockfile --cache-folder .yarn
+    - &npm-install yarn install --frozen-lockfile
     - yarn run build
   artifacts:
     paths:
