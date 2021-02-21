@@ -101,3 +101,24 @@ test-e2e:
   script:
     - *npm-install
     - yarn run test:e2e --ci
+
+deploy_develop:
+  stage: deploy
+  image: docker
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:develop -t $CI_REGISTRY_IMAGE:develop-$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:develop
+    - docker push $CI_REGISTRY_IMAGE:develop-$CI_COMMIT_SHORT_SHA
+
+deploy_merge_requests:
+  stage: deploy
+  image: docker
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+      when: on_success
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_SOURCE_BRANCH_SHA
