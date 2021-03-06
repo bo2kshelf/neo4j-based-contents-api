@@ -118,7 +118,7 @@ test-e2e:
 
 deploy_develop:
   stage: deploy
-  image: docker
+  image: docker:dind
   rules:
     - if: '$CI_COMMIT_BRANCH == "develop"'
   variables:
@@ -131,7 +131,7 @@ deploy_develop:
 
 deploy_merge_requests:
   stage: deploy
-  image: docker
+  image: docker:dind
   rules:
     - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
   variables:
